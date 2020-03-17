@@ -1,0 +1,24 @@
+{
+  "name": "release-for-reddit-action",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Submit a Reddit post about your release",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "ncc build -m index.js",
+    "format": "prettier --write index.js"
+  },
+  "keywords": [
+    "actions",
+    "release"
+  ],
+  "author": "Bjorn Lu",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.2.3"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.21.1",
+    "prettier": "^1.19.1"
+  }
+}

@@ -1,0 +1,46 @@
+name: Release for Reddit
+description: Submit a Reddit post about your release
+author: Bjorn Lu
+branding:
+  icon: send
+  color: red
+inputs:
+  username:
+    description: Your Reddit username
+    required: true
+  password:
+    description: Your Reddit password
+    required: true
+  app-id:
+    description: The app ID
+    required: true
+  app-secret:
+    description: The app secret
+    required: true
+  subreddit:
+    description: The subreddit to post
+    required: true
+  title:
+    description: The post title
+    required: false
+    default: '${{ github.repository }} ${{ github.event.release.tag_name }} Released'
+  url:
+    description: The post url
+    required: false
+    default: ${{ github.event.release.html_url }}
+  flair-id:
+    description: The post flair's ID
+    required: false
+  flair-text:
+    description: The post flair's text (applicable if text_editable is true)
+    required: false
+  comment:
+    description: Add a comment to the post
+    required: false
+  retry-rate-limit:
+    description: How many times to retry if it hits the rate limit. This will wait for the limit to end before retrying.
+    required: false
+    default: 1
+runs:
+  using: node12
+  main: dist/index.js
