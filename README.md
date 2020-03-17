@@ -5,6 +5,10 @@ Automate submitting a Reddit post about your release using the Reddit API.
 You don't need to be a moderator of a subreddit to use this. In fact, this
 action is only tested using a regular account.
 
+Since this runs on per-release basis, I have made a [separate repo](https://github.com/BjornLuG/release-for-reddit-action-test/)
+for testing. You can check out its [Actions tab](https://github.com/BjornLuG/release-for-reddit-action-test/actions)
+for the release post on Reddit!
+
 ## Setup API
 
 Before using this action, you will need to have access to the Reddit API.
@@ -55,7 +59,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: BjornLuG/release-for-reddit-action@v1.0.0
+    - uses: BjornLuG/release-for-reddit-action@v1
       with:
         username: ${{ secrets.REDDIT_USERNAME }}
         password: ${{ secrets.REDDIT_PASSWORD }}
