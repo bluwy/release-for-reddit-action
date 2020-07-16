@@ -5,8 +5,8 @@ Automate submitting a Reddit post about your release using the Reddit API.
 You don't need to be a moderator of a subreddit to use this. In fact, this
 action is only tested using a regular account.
 
-Since this runs on per-release basis, I have made a [separate repo](https://github.com/BjornLuG/release-for-reddit-action-test/)
-for testing. You can check out its [Actions tab](https://github.com/BjornLuG/release-for-reddit-action-test/actions)
+Since this runs on per-release basis, I have made a [separate repo](https://github.com/bluwy/release-for-reddit-action-test/)
+for testing. You can check out its [Actions tab](https://github.com/bluwy/release-for-reddit-action-test/actions)
 for the release post on Reddit!
 
 ## Setup API
@@ -59,7 +59,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: BjornLuG/release-for-reddit-action@v1
+    - uses: bluwy/release-for-reddit-action@v1
       with:
         username: ${{ secrets.REDDIT_USERNAME }}
         password: ${{ secrets.REDDIT_PASSWORD }}
@@ -102,7 +102,7 @@ triggered on each push or pull request. If so, make sure to set the `title` and
 
 Default: `${{ github.repository }} ${{ github.event.release.tag_name }} Released`
 
-The default would output e.g. "BjornLuG/awesome-lib v1.0.0 Released"
+The default would output e.g. "bluwy/awesome-lib v1.0.0 Released"
 
 > More info on the different contexts that can be used:
 [Context and expression syntax for GitHub Actions](https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions)
@@ -116,7 +116,7 @@ The default would output e.g. "BjornLuG/awesome-lib v1.0.0 Released"
 
 Default: `${{ github.event.release.html_url }}`
 
-The default would output e.g. "https://github.com/BjornLuG/awesome-lib/releases/tag/v1.0.0"
+The default would output e.g. "https://github.com/bluwy/awesome-lib/releases/tag/v1.0.0"
 
 #### `flair-id`
 
