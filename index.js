@@ -4,29 +4,15 @@ const core = require('@actions/core')
 class Main {
   constructor() {
     // Auth
-    this.username = core.getInput('username', {
-      required: true
-    })
-    this.password = core.getInput('password', {
-      required: true
-    })
-    this.appId = core.getInput('app-id', {
-      required: true
-    })
-    this.appSecret = core.getInput('app-secret', {
-      required: true
-    })
+    this.username = core.getInput('username', { required: true })
+    this.password = core.getInput('password', { required: true })
+    this.appId = core.getInput('app-id', { required: true })
+    this.appSecret = core.getInput('app-secret', { required: true })
 
     // Post
-    this.subreddit = core.getInput('subreddit', {
-      required: true
-    })
-    this.title = core.getInput('title', {
-      required: true
-    })
-    this.url = core.getInput('url', {
-      required: true
-    })
+    this.subreddit = core.getInput('subreddit', { required: true })
+    this.title = core.getInput('title', { required: true })
+    this.url = core.getInput('url', { required: true })
     this.flairId = core.getInput('flair-id')
     this.flairText = core.getInput('flair-text')
 
@@ -34,6 +20,7 @@ class Main {
     this.comment = core.getInput('comment')
 
     // Others
+    this.notification = core.getInput('notification') === 'true'
     this.retryRateLimit = +core.getInput('retry-rate-limit')
     this.userAgent = `Release for Reddit (by /u/${this.username})`
 
@@ -57,6 +44,12 @@ class Main {
 
       core.info(`View comment at ${commentUrl}`)
       core.setOutput('commentUrl', commentUrl)
+
+      // Notifications are enabled by default for comments.
+      // So only disable if the user wants to.
+      if (!this.notification) {
+        this.editSendReplies(commentData.things[0].data.name, false)
+      }
     }
   }
 
@@ -95,7 +88,8 @@ class Main {
           title: this.title,
           url: this.url,
           flair_id: this.flairId,
-          flair_text: this.flairText
+          flair_text: this.flairText,
+          sendreplies: this.notification
         }
       )
 
@@ -146,6 +140,32 @@ class Main {
     return resultData
   }
 
+  async editSendReplies(thingId, state) {
+    await this._retryIfRateLimit(async () => {
+      const r = await this._post(
+        {
+          host: 'oauth.reddit.com',
+          path: `/api/sendreplies`,
+          headers: {
+            Authorization: `Bearer ${this.accessToken}`
+          }
+        },
+        {
+          id: thingId,
+          state
+        }
+      )
+
+      // Check error here so we can retry if hit rate limit.
+      // Reddit returns code 200 for rate limit for some reason.
+      if (r && r.json && r.json.errors && r.json.errors.length) {
+        throw new Error(r.json.errors)
+      }
+
+      return r
+    })
+  }
+
   _post(options, data) {
     const postData = this._encodeForm(data)
 
@@ -185,7 +205,7 @@ class Main {
    * @param {number} retryCount The number of retries. If 0, will not retry again.
    * @returns The return type of fn
    */
-  async _retryIfRateLimit(fn, retryCount = 1) {
+  async _retryIfRateLimit(fn, retryCount = this.retryRateLimit) {
     try {
       return await fn()
     } catch (e) {

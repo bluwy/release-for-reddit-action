@@ -101,3 +101,8 @@ Example comment result:
   }
 }
 ```
+
+Example sendreplies result:
+```js
+{}
+```

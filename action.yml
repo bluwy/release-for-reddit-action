@@ -37,6 +37,10 @@ inputs:
   comment:
     description: Add a comment to the post
     required: false
+  notification:
+    description: Whether to send post and comment replies to inbox
+    required: false
+    default: false
   retry-rate-limit:
     description: How many times to retry if it hits the rate limit. This will wait for the limit to end before retrying.
     required: false

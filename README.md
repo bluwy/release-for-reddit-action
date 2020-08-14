@@ -135,6 +135,13 @@ excerpt for the lazy. Will not comment if this is not set or empty.
 For example, if your changelog happens to be your release description, you can
 set this to `${{ github.event.release.body }}`.
 
+#### `notification`
+
+**Optional** Whether to have replies on post and comments to be sent to inbox.
+Set `true` to enable.
+
+Default: `false`
+
 #### `retry-rate-limit`
 
 **Optional** How many times to retry if it hits the rate limit. This will wait
