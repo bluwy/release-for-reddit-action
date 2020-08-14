@@ -48,7 +48,7 @@ class Main {
       // Notifications are enabled by default for comments.
       // So only disable if the user wants to.
       if (!this.notification) {
-        this.editSendReplies(commentData.things[0].data.name, false)
+        this.editSendReplies(commentData.name, false)
       }
     }
   }
