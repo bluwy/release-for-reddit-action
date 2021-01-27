@@ -16,7 +16,7 @@ async function parseText({ payload, octokit }) {
   return files
     .filter(
       (file) =>
-        file.status === "added" && /^posts\/.*\.posts/.test(file.filename)
+        file.status === "added" && /^posts\/.*\.post/.test(file.filename)
     )
     .map((file) => {
       const text = readFileSync(
