@@ -3,7 +3,7 @@ module.exports = parseText;
 const { resolve: resolvePath } = require("path");
 const { readFileSync } = require("fs");
 
-async function getNewTweets({ payload, octokit }) {
+async function parseText({ payload, octokit }) {
   const {
     data: { files },
   } = await octokit.request("GET /repos/:owner/:repo/compare/:base...:head", {
