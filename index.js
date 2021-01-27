@@ -12,7 +12,7 @@ class Main {
     // Post
     this.subreddit = core.getInput('subreddit', { required: true })
     this.title = core.getInput('title', { required: true })
-    this.url = core.getInput('url', { required: true })
+    this.text = core.getInput('text', { required: true })
     this.flairId = core.getInput('flair-id')
     this.flairText = core.getInput('flair-text')
 
@@ -86,7 +86,7 @@ class Main {
           kind: 'link',
           sr: this.subreddit,
           title: this.title,
-          url: this.url,
+          text: this.text,
           flair_id: this.flairId,
           flair_text: this.flairText,
           sendreplies: this.notification
