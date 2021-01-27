@@ -55,12 +55,6 @@ class Main {
       ref,
       sha,
       startedAt: new Date().toISOString(),
-      twitterCredentials: {
-        consumer_key: process.env.TWITTER_API_KEY,
-        consumer_secret: process.env.TWITTER_API_SECRET_KEY,
-        access_token_key: process.env.TWITTER_ACCESS_TOKEN,
-        access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
-      },
     };
     // find tweets
     const newPosts = await parseText(state);
@@ -68,28 +62,12 @@ class Main {
       toolkit.info("No new posts");
       return;
     }
-    console.log(newPosts)
     this.text = newPosts[0].text
     console.log(this.text)
     const postData = await this.submitPost()
 
     core.info(`View post at ${postData.url}`)
     core.setOutput('postUrl', postData.url)
-
-    if (this.comment) {
-      const commentData = await this.commentPost(postData.name)
-
-      const commentUrl = `https://www.reddit.com${commentData.permalink}`
-
-      core.info(`View comment at ${commentUrl}`)
-      core.setOutput('commentUrl', commentUrl)
-
-      // Notifications are enabled by default for comments.
-      // So only disable if the user wants to.
-      if (!this.notification) {
-        this.editSendReplies(commentData.name, false)
-      }
-    }
   }
 
   async initAccessToken() {
@@ -144,66 +122,6 @@ class Main {
     return result.json.data
   }
 
-  async commentPost(postId) {
-    const result = await this._retryIfRateLimit(async () => {
-      const r = await this._post(
-        {
-          host: 'oauth.reddit.com',
-          path: `/api/comment`,
-          headers: {
-            Authorization: `Bearer ${this.accessToken}`
-          }
-        },
-        {
-          api_type: 'json',
-          text: this.comment,
-          thing_id: postId
-        }
-      )
-
-      // Check error here so we can retry if hit rate limit.
-      // Reddit returns code 200 for rate limit for some reason.
-      if (r.json.errors.length) {
-        throw new Error(r.json.errors)
-      }
-
-      return r
-    })
-
-    const resultData = result.json.data
-
-    if (resultData && resultData.things && resultData.things[0]) {
-      return resultData.things[0].data
-    }
-
-    return resultData
-  }
-
-  async editSendReplies(thingId, state) {
-    await this._retryIfRateLimit(async () => {
-      const r = await this._post(
-        {
-          host: 'oauth.reddit.com',
-          path: `/api/sendreplies`,
-          headers: {
-            Authorization: `Bearer ${this.accessToken}`
-          }
-        },
-        {
-          id: thingId,
-          state
-        }
-      )
-
-      // Check error here so we can retry if hit rate limit.
-      // Reddit returns code 200 for rate limit for some reason.
-      if (r && r.json && r.json.errors && r.json.errors.length) {
-        throw new Error(r.json.errors)
-      }
-
-      return r
-    })
-  }
 
   _post(options, data) {
     const postData = this._encodeForm(data)
@@ -229,7 +147,7 @@ class Main {
           data += chunk
         })
         res.on('error', e => reject(e))
-        res.on('end', () => resolve(JSON.parse(data)))
+        res.on('end', () => resolve(data))
       })
 
       req.on('error', e => reject(e))
