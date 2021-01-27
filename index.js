@@ -10,16 +10,9 @@ class Main {
     this.appId = core.getInput('app-id', { required: true })
     this.appSecret = core.getInput('app-secret', { required: true })
 
-    // find tweets
-    const newPosts = await parseText(state);
-    if (newPosts.length === 0) {
-      toolkit.info("No new posts");
-      return;
-    }
     // Post
     this.subreddit = core.getInput('subreddit', { required: true })
     this.title = core.getInput('title', { required: true })
-    this.text = newPosts
     this.flairId = core.getInput('flair-id')
     this.flairText = core.getInput('flair-text')
 
@@ -39,6 +32,13 @@ class Main {
   async start() {
     await this.initAccessToken()
 
+    // find tweets
+    const newPosts = await parseText(state);
+    if (newPosts.length === 0) {
+      toolkit.info("No new posts");
+      return;
+    }
+    this.text = newPosts
     const postData = await this.submitPost()
 
     core.info(`View post at ${postData.url}`)
