@@ -68,8 +68,8 @@ class Main {
       toolkit.info("No new posts");
       return;
     }
-    this.text = newPosts
-    console.log(newPosts)
+    this.text = newPosts['text']
+    console.log(this.text)
     const postData = await this.submitPost()
 
     core.info(`View post at ${postData.url}`)
