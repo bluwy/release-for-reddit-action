@@ -112,9 +112,9 @@ class Main {
 
       // Check error here so we can retry if hit rate limit.
       // Reddit returns code 200 for rate limit for some reason.
-      if (r.json.errors.length) {
-        throw new Error(r.json.errors)
-      }
+      //if (r.json.errors.length) {
+      //  throw new Error(r.json.errors)
+      //}
 
       return r
     })
