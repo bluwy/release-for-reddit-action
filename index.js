@@ -68,7 +68,8 @@ class Main {
       toolkit.info("No new posts");
       return;
     }
-    this.text = newPosts['text']
+    console.log(newPosts)
+    this.text = newPosts[0].text
     console.log(this.text)
     const postData = await this.submitPost()
 
