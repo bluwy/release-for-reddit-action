@@ -6,9 +6,6 @@ const { readFileSync } = require("fs");
 const { Octokit } = require("@octokit/action");
 const toolkit = require("@actions/core");
 
-const handlePullRequest = require("./pull-request");
-const handlePush = require("./push");
-
 const VERSION = require("../package.json").version;
 
 console.log(`Running twitter-together version ${VERSION}`);
