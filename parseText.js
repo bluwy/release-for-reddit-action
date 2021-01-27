@@ -1,4 +1,4 @@
-module.exports = getNewTweets;
+module.exports = parseText;
 
 const { resolve: resolvePath } = require("path");
 const { readFileSync } = require("fs");
