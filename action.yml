@@ -24,10 +24,9 @@ inputs:
     description: The post title
     required: false
     default: '${{ github.repository }} ${{ github.event.release.tag_name }} Released'
-  url:
-    description: The post url
+  test:
+    description: The post test
     required: false
-    default: ${{ github.event.release.html_url }}
   flair-id:
     description: The post flair's ID
     required: false
