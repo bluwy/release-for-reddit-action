@@ -104,9 +104,6 @@ class Main {
           sr: this.subreddit,
           title: this.title,
           text: this.text,
-          flair_id: this.flairId,
-          flair_text: this.flairText,
-          sendreplies: this.notification
         }
       )
       console.log(r.json.errors)
@@ -148,7 +145,7 @@ class Main {
           data += chunk
         })
         res.on('error', e => reject(e))
-        res.on('end', () => resolve(JSON.parse(data)))
+        res.on('end', () => resolve())
       })
 
       req.on('error', e => reject(e))
