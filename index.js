@@ -109,12 +109,13 @@ class Main {
           sendreplies: this.notification
         }
       )
-
+      console.log(r.json.errors)
+      console.log(r.json.data)
       // Check error here so we can retry if hit rate limit.
       // Reddit returns code 200 for rate limit for some reason.
-      //if (r.json.errors.length) {
-      //  throw new Error(r.json.errors)
-      //}
+      if (r.json.errors.length) {
+        throw new Error(r.json.errors)
+      }
 
       return r
     })
@@ -147,7 +148,7 @@ class Main {
           data += chunk
         })
         res.on('error', e => reject(e))
-        res.on('end', () => resolve(data))
+        res.on('end', () => resolve(JSON.parse(data)))
       })
 
       req.on('error', e => reject(e))
