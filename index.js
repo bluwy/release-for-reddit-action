@@ -72,7 +72,7 @@ class Main {
 
 
     // Alternatively, just pass in a username and password for script-type apps.
-    const otherRequester = new snoowrap({
+    const r = new snoowrap({
       userAgent: this.userAgent,
       clientId: this.appId,
       clientSecret: this.appSecret,
