@@ -100,7 +100,7 @@ class Main {
         {
           api_type: 'json',
           resubmit: true,
-          kind: 'link',
+          kind: 'self',
           sr: this.subreddit,
           title: this.title,
           text: this.text,
