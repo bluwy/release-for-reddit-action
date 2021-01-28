@@ -39,7 +39,6 @@ class Main {
 
   // The main logic here
   async start() {
-    await this.initAccessToken()
 
     const octokit = new Octokit();
 
