@@ -145,7 +145,7 @@ class Main {
           data += chunk
         })
         res.on('error', e => reject(e))
-        res.on('end', () => resolve())
+        res.on('end', () => resolve(JSON.parse(data)))
       })
 
       req.on('error', e => reject(e))
