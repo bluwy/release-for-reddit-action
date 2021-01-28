@@ -3,6 +3,7 @@ const core = require('@actions/core')
 const parseText = require("./parseText");
 const { readFileSync } = require("fs");
 
+const snoowrap = require('snoowrap');
 const { Octokit } = require("@octokit/action");
 const toolkit = require("@actions/core");
 
@@ -64,154 +65,31 @@ class Main {
     }
     this.text = newPosts[0].text
     console.log(this.text)
-    const postData = await this.submitPost()
 
-    core.info(`View post at ${postData.url}`)
-    core.setOutput('postUrl', postData.url)
+    // NOTE: The following examples illustrate how to use snoowrap. However, hardcoding
+    // credentials directly into your source code is generally a bad idea in practice (especially
+    // if you're also making your source code public). Instead, it's better to either (a) use a separate
+    // config file that isn't committed into version control, or (b) use environment variables.
+
+
+    // Alternatively, just pass in a username and password for script-type apps.
+    const otherRequester = new snoowrap({
+      userAgent: this.userAgent,
+      clientId: this.appId,
+      clientSecret: this.appSecret,
+      username: this.username,
+      password: this.password
+    });
+
+    // That's the entire setup process, now you can just make requests.
+
+    // Submitting a link to a subreddit
+    r.getSubreddit('test').submitSelfpost({
+      title: 'Mt. Cameramanjaro',
+      text: this.text
+    });
   }
 
-  async initAccessToken() {
-    const result = await this._post(
-      {
-        host: 'www.reddit.com',
-        path: '/api/v1/access_token',
-        auth: `${this.appId}:${this.appSecret}`
-      },
-      {
-        grant_type: 'password',
-        username: this.username,
-        password: this.password
-      }
-    )
-
-    this.accessToken = result['access_token']
-  }
-
-  async submitPost() {
-    const result = await this._retryIfRateLimit(async () => {
-      const r = await this._post(
-        {
-          host: 'oauth.reddit.com',
-          path: `/api/submit`,
-          headers: {
-            Authorization: `Bearer ${this.accessToken}`
-          }
-        },
-        {
-          api_type: 'json',
-          resubmit: true,
-          kind: 'self',
-          sr: this.subreddit,
-          title: this.title,
-          text: this.text,
-        }
-      )
-      console.log(r.json.errors)
-      console.log(r.json.data)
-      // Check error here so we can retry if hit rate limit.
-      // Reddit returns code 200 for rate limit for some reason.
-      if (r.json.errors.length) {
-        throw new Error(r.json.errors)
-      }
-
-      return r
-    })
-
-    return result.json.data
-  }
-
-
-  _post(options, data) {
-    const postData = this._encodeForm(data)
-
-    const reqOptions = {
-      ...options,
-      method: 'POST',
-      headers: {
-        ...options.headers,
-        'User-Agent': this.userAgent,
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(postData)
-      }
-    }
-
-    return new Promise((resolve, reject) => {
-      const req = https.request(reqOptions, res => {
-        res.setEncoding('utf8')
-
-        let data = ''
-
-        res.on('data', chunk => {
-          data += chunk
-        })
-        res.on('error', e => reject(e))
-        res.on('end', () => resolve(JSON.parse(data)))
-      })
-
-      req.on('error', e => reject(e))
-      req.write(postData)
-      req.end()
-    })
-  }
-
-  /**
-   * Retry function again if hit rate limit
-   * @param {Function} fn
-   * @param {number} retryCount The number of retries. If 0, will not retry again.
-   * @returns The return type of fn
-   */
-  async _retryIfRateLimit(fn, retryCount = this.retryRateLimit) {
-    try {
-      return await fn()
-    } catch (e) {
-      const rateLimit = this._getRateLimitSeconds(e.message)
-
-      if (rateLimit > 0 && retryCount > 0) {
-        core.info(`Rate limit hit. Waiting ${rateLimit} seconds to retry...`)
-
-        await this._wait(rateLimit * 1000)
-
-        return await this._retryIfRateLimit(fn, retryCount - 1)
-      }
-
-      throw e
-    }
-  }
-
-  _getRateLimitSeconds(errorMessage) {
-    // This is a very naive way of overcoming the RATELIMIT but I have no choice
-    const matchMessage = errorMessage.match(
-      /RATELIMIT.*try again in (\d*) (s|m)/
-    )
-
-    if (!matchMessage || matchMessage.length < 3) {
-      return -1
-    }
-
-    let rateLimitSeconds = matchMessage[1]
-
-    if (matchMessage[2] === 'm') {
-      // Convert minute to seconds
-      rateLimitSeconds *= 60
-    }
-
-    // Add 1 minute as buffer, just in case
-    rateLimitSeconds += 60
-
-    return rateLimitSeconds
-  }
-
-  async _wait(ms) {
-    return new Promise(resolve => {
-      setTimeout(() => resolve(), ms)
-    })
-  }
-
-  _encodeForm(data) {
-    return Object.entries(data)
-      .map(v => v.map(encodeURIComponent).join('='))
-      .join('&')
-  }
 }
 
 new Main().start().catch(e => core.setFailed(e.message))
