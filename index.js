@@ -71,6 +71,29 @@ class Main {
   }
 
   async submitPost() {
+    let postData = {
+      api_type: 'json',
+      resubmit: true,
+      sr: this.subreddit,
+      title: this.title,
+      flair_id: this.flairId,
+      flair_text: this.flairText,
+      sendreplies: this.notification
+    }
+
+    // https://www.reddit.com/r/test/comments/fjlsg1/test/
+    //                                        ------
+    const redditPostUrlRegex = /^https?:\/\/.*reddit.com\/(?:(.*?)\/){4}/
+    const match = this.url.match(redditPostUrlRegex)
+
+    if (match) {
+      postData.kind = 'crosspost'
+      postData.crosspost_fullname = `t3_${match[1]}`
+    } else {
+      postData.kind = 'link'
+      postData.url = this.url
+    }
+
     const result = await this._retryIfRateLimit(async () => {
       const r = await this._post(
         {
@@ -80,17 +103,7 @@ class Main {
             Authorization: `Bearer ${this.accessToken}`
           }
         },
-        {
-          api_type: 'json',
-          resubmit: true,
-          kind: 'link',
-          sr: this.subreddit,
-          title: this.title,
-          url: this.url,
-          flair_id: this.flairId,
-          flair_text: this.flairText,
-          sendreplies: this.notification
-        }
+        postData
       )
 
       // Check error here so we can retry if hit rate limit.
