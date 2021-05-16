@@ -1,0 +1,30 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@actions/core': ^1.2.7
+  '@vercel/ncc': ^0.28.5
+  prettier: ^2.3.0
+
+dependencies:
+  '@actions/core': 1.2.7
+
+devDependencies:
+  '@vercel/ncc': 0.28.5
+  prettier: 2.3.0
+
+packages:
+
+  /@actions/core/1.2.7:
+    resolution: {integrity: sha512-kzLFD5BgEvq6ubcxdgPbRKGD2Qrgya/5j+wh4LZzqT915I0V3rED+MvjH6NXghbvk1MXknpNNQ3uKjXSEN00Ig==}
+    dev: false
+
+  /@vercel/ncc/0.28.5:
+    resolution: {integrity: sha512-ZSwD4EDCon2EsnPZ2/Qcigx4N2DiuBLV/rDnF04giEPFuDeBeUDdnSTyYYfX8KNic/prrJuS1vUEmAOHmj+fRg==}
+    hasBin: true
+    dev: true
+
+  /prettier/2.3.0:
+    resolution: {integrity: sha512-kXtO4s0Lz/DW/IJ9QdWhAf7/NmPWQXkFr/r/WkR3vyI+0v8amTDxiaQSLzs8NBlytfLWX/7uQUMIW677yLKl4w==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true

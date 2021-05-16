@@ -15,10 +15,10 @@
   "author": "Bjorn Lu",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.6"
+    "@actions/core": "^1.2.7"
   },
   "devDependencies": {
-    "@zeit/ncc": "^0.21.1",
-    "prettier": "^1.19.1"
+    "@vercel/ncc": "^0.28.5",
+    "prettier": "^2.3.0"
   }
 }
