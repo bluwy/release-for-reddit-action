@@ -36,7 +36,7 @@ Add secrets for:
 - REDDIT_USERNAME: Your Reddit username
 - REDDIT_PASSWORD: Your Reddit password
 - REDDIT_APP_ID: The app ID
-- REDDIT_API_SECRET: The app secret
+- REDDIT_APP_SECRET: The app secret
 
 2. Configure the workflow. Here, we use the secrets we set earlier and add parameters for the action. See the [full list of parameters](#parameters).
 
