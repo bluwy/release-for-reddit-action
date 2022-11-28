@@ -1,5 +1,10 @@
 # Changelog
 
+## 2 - 2022-11-28
+
+- Update dependencies
+- Bump NodeJS version to v16
+
 ## 1.2 - 2021-05-16
 
 ### Added

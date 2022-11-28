@@ -4,8 +4,6 @@ Automate submitting a Reddit post about your release using the Reddit API.
 
 You don't need to be a moderator of a subreddit to use this. In fact, this action is only tested using a regular account.
 
-Since this runs on per-release basis, I have made a [separate repo](https://github.com/bluwy/release-for-reddit-action-test/) for testing. You can check out its [Actions tab](https://github.com/bluwy/release-for-reddit-action-test/actions) for the release post on Reddit!
-
 ## Setup API
 
 Before using this action, you will need to have access to the Reddit API.
@@ -18,16 +16,17 @@ Before using this action, you will need to have access to the Reddit API.
 
 3. Once created, find the app ID and secret.
 
-> ⚠️ DO NOT share the app secret in public. The image below is of course an invalid secret to show as an example.
+> **Warning**
+> DO NOT share the app secret in public. The image below is an invalid secret to show as an example.
 
 ![App view](./.github/images/app-view.png)
 
-4. You can follow the steps below to configure the action. If you're interested, you can follow [Reddit's cURL quick start](https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example)
-   to test this app. (Make sure to set a different user agent!!)
+4. You can follow the steps below to configure the action. If you're interested, you can follow [Reddit's cURL quick start](https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example) to test this app. (If you get rate limit issues, make sure to set a different user agent)
 
 ## Get into Action
 
-> ⚠️ Make sure you have configured your API/app before continuing below. If haven't, see the instructions above.
+> **Note**
+> Make sure you have configured your API/app before continuing below. If haven't, see the instructions above.
 
 1. Set the secrets for usage in GitHub Actions. Go to your repo > Settings > Secrets > Add a new secret.
 
@@ -62,7 +61,7 @@ jobs:
 
 3. Create a release!
 
-> While this action is meant for releases, you can definitely configure it to be triggered on each push or pull request. If so, make sure to set the `title` and `url` parameters since they, by default, use values from a release.
+> While this action is meant for releases, you can also configure it to be triggered on each push or pull request. If so, make sure to set the `title` and `url` parameters since they, by default, use values from a release.
 
 ## Parameters
 
@@ -150,39 +149,37 @@ The link to the comment if a comment text is defined and succesfully submitted.
 
 #### Why do I need to provide my username and password? It already has my app's ID and secret.
 
-Well that's how the Reddit OAuth API works. To get the access token, you have to supply your username, password, app ID and app secret.
+That's how the Reddit OAuth API works. To get the access token, you have to supply your username, password, app ID and app secret.
 
-Check out [Reddit's quick start example](https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example) which also requires the four information for authentication. (Make sure to set a different user agent!!)
+Check out [Reddit's quick start example](https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example) which also requires the four information for authentication. (If you get rate limit issues, make sure to set a different user agent)
 
 #### How do I set a flair?
 
-Setting a flair requires its flair ID. To find the supported flairs for a subreddit, go to https://www.reddit.com/r/subreddit/api/link_flair.json.
+Setting a flair requires its flair ID. To find the supported flairs for a subreddit, go to https://www.reddit.com/r/subreddit/api/link_flair.json. Replace "subreddit" with your target subreddit and make sure you're logged in for this to work.
 
-Of course, replace "subreddit" with your target subreddit amd make sure you're logged in for this to work.
-
-This endpoint will return a list of flairs in JSON format, which you can choose one using the flair id.
+The endpoint will return a list of flairs in JSON format, which you can choose one using the flair id.
 
 If the flair's `text_editable` property is true, you can set the `flair-text` parameter to set a custom text for the flair.
 
 #### What's the rate limit error?
 
-There are two kinds of rate limit in Reddit. One is the usual request limit to the `oauth.reddit.com` endpoint, which is a generous 600 request per 10 minutes. This action will never hit this limit unless you're also using the API for other clients.
+There are two kinds of rate limit in Reddit. One is the request limit to the `oauth.reddit.com` endpoint, which is a generous 600 request per 10 minutes. This action will never hit this limit unless you're also using the API for other clients.
 
-The other rate limit is for post and comments submissions. If you start with a new account, it's very likely to get up to 10 minutes of rate limting. In most cases, this should be the only limit you should be concerned of.
+The other rate limit is for post and comments submissions. If you start with a new account, it's very likely to get up to 10 minutes of rate limiting. You will likely hit this issue more often than the `oauth` rate limit.
 
-Though Reddit dont't explicitly tell how the submission rate limit is calculated, various sources from the admins said that having on older account and high karma (especially in the specific subreddit) helps reduce this limit.
+Though Reddit doesn't explicitly tell how the submission rate limit is calculated, various sources from the admins mentioned that having an older account and higher karma (especially in the specific subreddit) helps reduce this limit.
 
 > In the development of this action, the rate limit was significantly reduced after the 24 hour mark of account creation.
 
 #### What's the `invalid-grant` error?
 
-If you encountered this error, make sure your credentials are entered correctly, which are your username, password, app ID and app secret.
+If you encounter this error, make sure your credentials are entered correctly, which are your username, password, app ID and app secret.
 
-If this does not work, follow [Reddit's cURL quick start](https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example) and try to retrive an access token. (Make sure to set a different user agent!!). If it works, file an issue :)
+If this does not work, follow [Reddit's cURL quick start](https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example) and try to retrive an access token. (If you get rate limit issues, make sure to set a different user agent). If it works, please file an issue!
 
-If the above didn't work, create a new account and use that instead. (Sucks but this happen to me too).
+If the above didn't work, create a new account and use that instead. (This also happened to me).
 
-> ⚠️ Keep in mind that new accounts are heavily rate limited.
+> Keep in mind that new accounts are heavily rate limited.
 
 ## License
 
