@@ -58,12 +58,12 @@ class Main {
       {
         host: 'www.reddit.com',
         path: '/api/v1/access_token',
-        auth: `${this.appId}:${this.appSecret}`
+        auth: `${this.appId}:${this.appSecret}`,
       },
       {
         grant_type: 'password',
         username: this.username,
-        password: this.password
+        password: this.password,
       }
     )
 
@@ -78,7 +78,7 @@ class Main {
       title: this.title,
       flair_id: this.flairId,
       flair_text: this.flairText,
-      sendreplies: this.notification
+      sendreplies: this.notification,
     }
 
     // https://www.reddit.com/r/test/comments/fjlsg1/test/
@@ -100,8 +100,8 @@ class Main {
           host: 'oauth.reddit.com',
           path: `/api/submit`,
           headers: {
-            Authorization: `Bearer ${this.accessToken}`
-          }
+            Authorization: `Bearer ${this.accessToken}`,
+          },
         },
         postData
       )
@@ -125,13 +125,13 @@ class Main {
           host: 'oauth.reddit.com',
           path: `/api/comment`,
           headers: {
-            Authorization: `Bearer ${this.accessToken}`
-          }
+            Authorization: `Bearer ${this.accessToken}`,
+          },
         },
         {
           api_type: 'json',
           text: this.comment,
-          thing_id: postId
+          thing_id: postId,
         }
       )
 
@@ -160,12 +160,12 @@ class Main {
           host: 'oauth.reddit.com',
           path: `/api/sendreplies`,
           headers: {
-            Authorization: `Bearer ${this.accessToken}`
-          }
+            Authorization: `Bearer ${this.accessToken}`,
+          },
         },
         {
           id: thingId,
-          state
+          state,
         }
       )
 
@@ -189,24 +189,24 @@ class Main {
         ...options.headers,
         'User-Agent': this.userAgent,
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(postData)
-      }
+        'Content-Length': Buffer.byteLength(postData),
+      },
     }
 
     return new Promise((resolve, reject) => {
-      const req = https.request(reqOptions, res => {
+      const req = https.request(reqOptions, (res) => {
         res.setEncoding('utf8')
 
         let data = ''
 
-        res.on('data', chunk => {
+        res.on('data', (chunk) => {
           data += chunk
         })
-        res.on('error', e => reject(e))
+        res.on('error', (e) => reject(e))
         res.on('end', () => resolve(JSON.parse(data)))
       })
 
-      req.on('error', e => reject(e))
+      req.on('error', (e) => reject(e))
       req.write(postData)
       req.end()
     })
@@ -260,16 +260,16 @@ class Main {
   }
 
   async _wait(ms) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       setTimeout(() => resolve(), ms)
     })
   }
 
   _encodeForm(data) {
     return Object.entries(data)
-      .map(v => v.map(encodeURIComponent).join('='))
+      .map((v) => v.map(encodeURIComponent).join('='))
       .join('&')
   }
 }
 
-new Main().start().catch(e => core.setFailed(e.message))
+new Main().start().catch((e) => core.setFailed(e.message))
