@@ -1,6 +1,6 @@
 {
   "name": "release-for-reddit-action",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "private": true,
   "description": "Submit a Reddit post about your release",
   "main": "dist/index.js",
@@ -15,10 +15,10 @@
   "author": "Bjorn Lu",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.7"
+    "@actions/core": "^1.10.0"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.28.5",
-    "prettier": "^2.3.0"
+    "@vercel/ncc": "^0.28.6",
+    "prettier": "^2.8.0"
   }
 }
